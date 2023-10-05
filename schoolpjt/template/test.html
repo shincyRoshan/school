@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form role="form" class="form-horizontal"  method="post" >
+							{% csrf_token %}
+    {{ form.category.label_tag }}
+    {{ form.category }}
+    {{ form.course.label_tag }}
+    <select id="id_course" name="course">
+        <option value="">---------</option>
+        {% for course in form.course.field.queryset %}
+            <option value="{{ course.id }}" data-category="{{ course.category_id }}">{{ course.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Submit">
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var categorySelect = document.getElementById('id_category');
+        var courseSelect = document.getElementById('id_course');
+
+        categorySelect.addEventListener('change', function () {
+            var selectedCategoryId = categorySelect.value;
+
+            // Hide all options in the course dropdown
+            for (var i = 0; i < courseSelect.options.length; i++) {
+                courseSelect.options[i].style.display = 'none';
+            }
+
+            // Show options for the selected category
+            for (var i = 0; i < courseSelect.options.length; i++) {
+                var courseOption = courseSelect.options[i];
+                if (courseOption.getAttribute('data-category') === selectedCategoryId || courseOption.value === '') {
+                    courseOption.style.display = '';
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
